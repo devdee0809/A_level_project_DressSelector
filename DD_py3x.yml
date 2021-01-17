@@ -1,0 +1,23 @@
+# conda env create -f py3x.yml
+name: py38
+channels:
+  - anaconda
+  - conda-forge
+  - defaults
+dependencies:
+  - dash
+  - dash-bootstrap-components
+  - flask
+  - jupyter
+  - mkl-service
+  - numpy
+  - opencv
+  - openpyxl
+  - pandas
+  - pip
+  - python=3.8
+  - scikit-learn
+  - xlrd
+  - flake8
+  - black
+  -
