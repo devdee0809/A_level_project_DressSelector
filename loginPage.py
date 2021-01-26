@@ -2,9 +2,7 @@ import base64
 import time
 
 import dash_bootstrap_components as dbc
-import dash_core_components as dcc
 import dash_html_components as html
-from dash import callback_context
 from dash.dependencies import Input, Output, State
 from dash.exceptions import PreventUpdate
 
@@ -15,18 +13,12 @@ logo_image = "logo.png"
 
 # --------------------------------------- IMAGES ---------------------------------------
 ds_logo_encoded = base64.b64encode(open(logo_image, "rb").read())
-
-img_ds = html.Img(
-    src=f"data:image/png;base64,{ds_logo_encoded.decode()}",
-    style={
-        "float": "centre",
-        "width": "50%",
-    },
-)
+ds_logo_decoded = f"data:image/png;base64,{ds_logo_encoded.decode()}"
 
 # --------------------------------------- CARDS ----------------------------------------
 login_card = dbc.Card(
     [
+        dbc.CardImg(src=ds_logo_decoded, top=True),
         dbc.CardBody(
             [
                 dbc.Input(
@@ -43,18 +35,22 @@ login_card = dbc.Card(
                 ),
                 dbc.Row(
                     [
-                        dbc.Button(
-                            children="login",
-                            id="button_login",
-                            color="primary",
-                            className="m-3",
+                        dbc.Col(
+                            dbc.Button(
+                                children="login",
+                                id="button_login",
+                                color="primary",
+                                className="m-3",
+                            ),
                         ),
-                        dbc.Button(
-                            children="signup",
-                            id="button_signup",
-                            color="primary",
-                            className="m-3",
-                            href="/signup",
+                        dbc.Col(
+                            dbc.Button(
+                                children="signup",
+                                id="button_signup",
+                                color="primary",
+                                className="m-3",
+                                href="/signup",
+                            ),
                         ),
                     ]
                 ),
@@ -76,16 +72,7 @@ layout = dbc.Container(
     [
         html.Div(
             [
-                # row1: logos
-                dbc.Row(
-                    dbc.Col(
-                        html.Div("TITLE"),
-                        width={"size": 6, "offset": 3},
-                    ),
-                    align="center",
-                    className="m-5",
-                ),
-                # row2: login
+                # row1: login
                 dbc.Row(
                     dbc.Col(
                         login_card,
@@ -94,7 +81,7 @@ layout = dbc.Container(
                     align="center",
                     className="m-5",
                 ),
-                # row3: alert
+                # row2: alert
                 dbc.Row(
                     dbc.Col(
                         alert_login,

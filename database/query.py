@@ -78,7 +78,7 @@ class DataBase:
         print(f"{self.cursor.rowcount} record(s) were modified...")
         self.cnxn.commit()
 
-    def insert_new_user(self, first_name, last_name, gender, email, password):
+    def create_new_user(self, first_name, last_name, gender, email, password):
         self.cursor.execute(
             "INSERT INTO USERS VALUES (?, ?, ?, ?, ?)",
             (first_name, last_name, gender, email, password),
@@ -95,6 +95,13 @@ class DataBase:
         self.cursor.execute("INSERT INTO OUTFITS VALUES (?)", (user_rowid))
         print(f"{self.cursor.rowcount} record(s) were modified...")
         self.cnxn.commit()
+
+    def select_random_item_id(self, sub_category):
+        row = self.cursor.execute(
+            "SELECT * FROM ITEMCATALOGUE WHERE subCategory=? ORDER BY RANDOM() LIMIT 1",
+            [sub_category],
+        ).fetchone()
+        return row["ItemID"]
 
 
 def main():

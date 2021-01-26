@@ -46,6 +46,7 @@ class DataBase:
         self.cursor.execute(
             """
         CREATE TABLE "ITEMCATALOGUE" (
+            "ItemID" INTEGER NOT NULL,
             "Subcategory"	TEXT NOT NULL,
             "Gender"	TEXT NOT NULL,
             "Season"	TEXT NOT NULL,
@@ -70,12 +71,7 @@ class DataBase:
 
 
 def main():
-    database = DataBase(
-        Path(
-            "database",
-            "database.db",
-        )
-    )
+    database = DataBase(Path("database", "database.db",))
     database.create_users_table()
     database.create_item_catalogue_table()
     database.create_outfit_table()

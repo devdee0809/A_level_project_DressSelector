@@ -43,12 +43,13 @@ class DataBase:
     def populate_item_catalogue_table(self, df):
         for row_index, row in df.iterrows():
             self.cursor.execute(
-                "INSERT INTO ITEMCATALOGUE VALUES (?,?,?,?)",
+                "INSERT INTO ITEMCATALOGUE VALUES (?,?,?,?,?)",
                 (
-                    row["id"],
-                    row["gender"],
-                    row["baseColour"],
-                    row["subCategory"],
+                    row["ItemID"],
+                    row["Subcategory"],
+                    row["Gender"],
+                    row["Season"],
+                    row["Colour"],
                 ),
             )
 
@@ -62,12 +63,7 @@ class DataBase:
         for row_index, row in df.iterrows():
             self.cursor.execute(
                 "INSERT INTO OUTFITCATALOGUE VALUES (?,?,?,?)",
-                (
-                    row["Headwear"],
-                    row["Topwear"],
-                    row["Bottomwear"],
-                    row["Shoes"],
-                ),
+                (row["Headwear"], row["Topwear"], row["Bottomwear"], row["Shoes"],),
             )
 
         self.cnxn.commit()
@@ -85,27 +81,12 @@ class DataBase:
 
 def main():
 
-    database = DataBase(
-        Path(
-            "database",
-            "database.db",
-        )
-    )
+    database = DataBase(Path("database", "database.db",))
 
-    df_users = pd.read_csv(
-        Path(
-            "database",
-            "Users.csv",
-        ),
-        encoding="utf-8",
-    )
+    df_users = pd.read_csv(Path("database", "Users.csv",), encoding="utf-8",)
 
     df_item_catalogue = pd.read_csv(
-        Path(
-            "database",
-            "ItemCatalogueSample.csv",
-        ),
-        encoding="utf-8",
+        Path("database", "ItemCatalogueSample.csv",), encoding="utf-8",
     )
 
     # take a sample outfit
