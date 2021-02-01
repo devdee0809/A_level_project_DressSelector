@@ -61,11 +61,7 @@ login_card = dbc.Card(
     inverse=True,
 )
 
-alert_login = dbc.Alert(
-    id="alert_login",
-    dismissable=True,
-    is_open=False,
-)
+alert_login = dbc.Alert(id="alert_login", dismissable=True, is_open=False,)
 
 # --------------------------------------- LAYOUT ---------------------------------------
 layout = dbc.Container(
@@ -74,19 +70,13 @@ layout = dbc.Container(
             [
                 # row1: login
                 dbc.Row(
-                    dbc.Col(
-                        login_card,
-                        width={"size": 6, "offset": 3},
-                    ),
+                    dbc.Col(login_card, width={"size": 6, "offset": 3},),
                     align="center",
                     className="m-5",
                 ),
                 # row2: alert
                 dbc.Row(
-                    dbc.Col(
-                        alert_login,
-                        width={"size": 6, "offset": 3},
-                    ),
+                    dbc.Col(alert_login, width={"size": 6, "offset": 3},),
                     align="center",
                     className="m-5",
                 ),
@@ -103,18 +93,11 @@ layout = dbc.Container(
         Output("alert_login", "color"),
         Output("alert_login", "children"),
     ],
-    [
-        Input("button_login", "n_clicks"),
-    ],
-    [
-        State("input_user_name_login", "value"),
-        State("input_password_login", "value"),
-    ],
+    [Input("button_login", "n_clicks"),],
+    [State("input_user_name_login", "value"), State("input_password_login", "value"),],
 )
 def validate_login(
-    button_login_n_clicks,
-    input_user_name_login_value,
-    input_password_login_value,
+    button_login_n_clicks, input_user_name_login_value, input_password_login_value,
 ):
     if button_login_n_clicks:
         if (
@@ -160,14 +143,10 @@ def validate_login(
 
 @app.callback(
     Output("url", "pathname"),
-    [
-        Input("button_login", "n_clicks"),
-        Input("alert_login", "color"),
-    ],
+    [Input("button_login", "n_clicks"), Input("alert_login", "color"),],
 )
 def change_pathname(
-    button_login_n_clicks,
-    alert_login_color,
+    button_login_n_clicks, alert_login_color,
 ):
     if button_login_n_clicks and alert_login_color == "success":
         time.sleep(1)

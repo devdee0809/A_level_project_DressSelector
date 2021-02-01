@@ -6,6 +6,7 @@ from dash import callback_context
 from dash.dependencies import Input, Output
 from dash.exceptions import PreventUpdate
 
+import accountDetails
 import loginPage
 import selectorPage
 import signupPage
@@ -29,6 +30,8 @@ def change_page_layout(pathname):
         return signupPage.layout
     elif pathname == "/selector":
         return selectorPage.layout
+    elif pathname == "/accountdetails":
+        return accountDetails.layout
     else:
         return loginPage.layout
 

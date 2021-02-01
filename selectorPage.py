@@ -1,3 +1,4 @@
+import time
 import base64
 
 import dash_bootstrap_components as dbc
@@ -18,9 +19,7 @@ ds_logo_decoded = f"data:image/png;base64,{ds_logo_encoded.decode()}"
 headwear = (
     dbc.Card(
         [
-            dbc.CardBody(
-                html.P("Headwear", className="card-text"),
-            ),
+            dbc.CardBody(html.P("Headwear", className="card-text"),),
             dbc.CardImg(
                 # src="images/Headwear/Men/2467.jpg",
                 # src=ds_logo_decoded,
@@ -200,15 +199,9 @@ user_details = (
     dbc.Card(
         dbc.CardBody(
             [
-                dbc.Row(
-                    html.H4("Account Details", className="card-title"),
-                ),
-                dbc.Row(
-                    html.P("Name:", className="card-text"),
-                ),
-                dbc.Row(
-                    html.P("Gender:", className="card-text"),
-                ),
+                dbc.Row(html.H4("Account Details", className="card-title"),),
+                dbc.Row(html.P("Name:", className="card-text"),),
+                dbc.Row(html.P("Gender:", className="card-text"),),
             ],
         ),
     ),
@@ -217,14 +210,15 @@ user_details = (
 
 navbar = dbc.NavbarSimple(
     children=[
+        dbc.NavItem(dbc.NavLink("Dress Selector", href="#"),),
+        dbc.NavItem(dbc.NavLink("Saved Outfits", href="#"),),
         dbc.NavItem(
-            dbc.NavLink("Dress Selector", href="#"),
-        ),
-        dbc.NavItem(
-            dbc.NavLink("Saved Outfits", href="#"),
-        ),
-        dbc.NavItem(
-            dbc.NavLink("Account Details", href="#"),
+            dbc.NavLink(
+                "Account Details",
+                href="/accountdetails",
+                id="account_details",
+                external_link=True,
+            ),
         ),
         dbc.DropdownMenu(
             children=[
@@ -248,37 +242,18 @@ layout = dbc.Container(
     [
         html.Div(
             [
-                dbc.Row(
-                    dbc.Col(
-                        navbar,
-                    ),
-                ),
-                dbc.Row(
-                    dbc.Col(
-                        user_details,
-                    ),
-                ),
+                dbc.Row(dbc.Col(navbar,),),
+                dbc.Row(dbc.Col(user_details,),),
                 dbc.Row(
                     [
-                        dbc.Col(
-                            headwear,
-                        ),
-                        dbc.Col(
-                            topwear,
-                        ),
-                        dbc.Col(
-                            bottomwear,
-                        ),
-                        dbc.Col(
-                            footwear,
-                        ),
+                        dbc.Col(headwear,),
+                        dbc.Col(topwear,),
+                        dbc.Col(bottomwear,),
+                        dbc.Col(footwear,),
                     ]
                 ),
                 dbc.Row(
-                    dbc.Col(
-                        user_buttons,
-                        width={"size": 4, "offset": 4},
-                    ),
+                    dbc.Col(user_buttons, width={"size": 4, "offset": 4},),
                     className="m-3",
                     align="center",
                 ),
@@ -291,14 +266,24 @@ layout = dbc.Container(
 # ------------------------------------- CALLBACKS --------------------------------------
 @app.callback(
     Output("card_img_headwear", "src"),
-    [
-        Input("button_headwear_randomise", "n_clicks"),
-    ],
+    [Input("button_headwear_randomise", "n_clicks"),],
 )
-def randomise_headwear(
-    button_headwear_randomise_n_clicks,
-):
+def randomise_headwear(button_headwear_randomise_n_clicks,):
     if button_headwear_randomise_n_clicks:
         return ds_logo_decoded
+    else:
+        raise PreventUpdate
+
+
+# i have had to rename output to make this work, not sure why
+# also this is an ugly page reload
+@app.callback(
+    Output("url_account", "pathname_account"), [Input("account_details", "n_clicks"),],
+)
+def change_pathname(account_details_n_clicks):
+    if account_details_n_clicks == "success":
+        time.sleep(1)
+        return "/accountdetails"
+
     else:
         raise PreventUpdate
