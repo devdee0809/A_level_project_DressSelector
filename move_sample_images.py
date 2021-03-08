@@ -5,14 +5,19 @@
     - by `Topwear`, `Shoes`, `Bottomwear`, `Headwear`
     - further categorized by `Men` & `Women`
 """
-# %%
-import pandas as pd
 import os
 import shutil
 
 # %%
+import pandas as pd
+
+# %%
 df = pd.read_csv(
-    os.path.join("dataset", "database", "item_catalogue_sample.csv",),
+    os.path.join(
+        "dataset",
+        "database",
+        "item_catalogue_sample.csv",
+    ),
     index_col="id",
     dtype={
         "gender": "category",
@@ -23,18 +28,28 @@ df = pd.read_csv(
         "season": "category",
         "productDisplayName": "category",
     },
-).sort_index(ascending=True,)
+).sort_index(
+    ascending=True,
+)
 
 df.info()
 
 # %%
 
 for ind, row in df.iterrows():
-    source = os.path.join("dataset", "images", f"{ind}.jpg",)
+    source = os.path.join(
+        "dataset",
+        "images",
+        f"{ind}.jpg",
+    )
     gender = row["gender"]
     sub_catergory = row["subCategory"]
     destination = os.path.join(
-        "dataset", "database", "item_catalogue_image_sample", sub_catergory, gender,
+        "dataset",
+        "database",
+        "item_catalogue_image_sample",
+        sub_catergory,
+        gender,
     )
 
     if not os.path.isdir(destination):

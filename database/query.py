@@ -10,21 +10,32 @@ class DataBase:
 
         self.cursor = self.cnxn.cursor()
 
+        self.user_rowid = None
         self.first_name = None
         self.last_name = None
         self.gender = None
         self.email = None
         self.password = None
 
+    def get_user_details(self):
+        return (
+            self.user_rowid,
+            self.first_name,
+            self.last_name,
+            self.gender,
+            self.email,
+            self.password,
+        )
+
     def check_user_exists(self, by, value):
         if by == "email":
             row = self.cursor.execute(
-                "SELECT * FROM USERS WHERE Email=?", [value]
+                "SELECT rowid, * FROM USERS WHERE Email=?", [value]
             ).fetchone()
 
         elif by == "rowid":
             row = self.cursor.execute(
-                "SELECT * FROM USERS WHERE rowid=?", [value]
+                "SELECT rowid, * FROM USERS WHERE rowid=?", [value]
             ).fetchone()
 
         else:
@@ -33,6 +44,7 @@ class DataBase:
         if row:
             # get user's details for later
             (
+                self.user_rowid,
                 self.first_name,
                 self.last_name,
                 self.gender,
@@ -50,30 +62,12 @@ class DataBase:
         else:
             return False
 
-    def update_user_first_name(self, rowid, first_name):
+    def update_user_details(
+        self, first_name, last_name, gender, email, password, user_rowid
+    ):
         self.cursor.execute(
-            "UPDATE USERS SET FirstName=? WHERE rowid=?", (first_name, rowid)
-        )
-        print(f"{self.cursor.rowcount} record(s) were modified...")
-        self.cnxn.commit()
-
-    def update_user_last_name(self, rowid, last_name):
-        self.cursor.execute(
-            "UPDATE USERS SET LastName=? WHERE rowid=?", (last_name, rowid)
-        )
-        print(f"{self.cursor.rowcount} record(s) were modified...")
-        self.cnxn.commit()
-
-    def update_user_email(self, rowid, new_email):
-        self.cursor.execute(
-            "UPDATE USERS SET Email=? WHERE rowid=?", (new_email, rowid)
-        )
-        print(f"{self.cursor.rowcount} record(s) were modified...")
-        self.cnxn.commit()
-
-    def update_user_password(self, rowid, new_password):
-        self.cursor.execute(
-            "UPDATE USERS SET Password=? WHERE rowid=?", (new_password, rowid)
+            "UPDATE USERS SET FirstName=?, LastName=?, Gender=?, Email=?, Password=? WHERE rowid=?",
+            (first_name, last_name, gender, email, password, user_rowid),
         )
         print(f"{self.cursor.rowcount} record(s) were modified...")
         self.cnxn.commit()
@@ -87,7 +81,7 @@ class DataBase:
         self.cnxn.commit()
 
     def delete_user(self, user_rowid):
-        self.cursor.execute("DELETE FROM USERS WHERE rowid = ?", (user_rowid))
+        self.cursor.execute("DELETE FROM USERS WHERE rowid = ?", [user_rowid])
         print(f"{self.cursor.rowcount} record(s) were modified...")
         self.cnxn.commit()
 
@@ -96,12 +90,20 @@ class DataBase:
         print(f"{self.cursor.rowcount} record(s) were modified...")
         self.cnxn.commit()
 
-    def select_random_item_id(self, sub_category):
+    def select_random_item(self, sub_category, gender):
         row = self.cursor.execute(
-            "SELECT * FROM ITEMCATALOGUE WHERE subCategory=? ORDER BY RANDOM() LIMIT 1",
-            [sub_category],
+            "SELECT * FROM ITEMCATALOGUE WHERE Subcategory=? AND Gender=? ORDER BY RANDOM() LIMIT 1",
+            (sub_category, gender),
         ).fetchone()
-        return row["ItemID"]
+        return row
+
+    def select_random_outfit(self, gender):
+        rows = self.cursor.execute(
+            "SELECT * FROM ITEMCATALOGUE WHERE Gender=? GROUP BY Subcategory ORDER BY RANDOM()",
+            [gender],
+        ).fetchall()
+
+        return rows
 
 
 def main():
@@ -112,7 +114,9 @@ def main():
         )
     )
 
-    database.check_user_exists(by="email", value="JakeSmith@gmail.com")
+    rows = database.select_random_outfit(gender="Men")
+    for row in rows:
+        print(row[0:5])
 
 
 if __name__ == "__main__":

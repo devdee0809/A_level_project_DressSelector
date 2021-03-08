@@ -1,0 +1,69 @@
+{
+    "telemetry.enableCrashReporter": false,
+    "telemetry.enableTelemetry": false,
+    "window.autoDetectColorScheme": true,
+    "workbench.preferredLightColorTheme": "Default Light+",
+    "workbench.preferredDarkColorTheme": "Default Dark+",
+    "files.autoSave": "afterDelay",
+    "files.autoSaveDelay": 5000,
+    "editor.formatOnSave": true,
+    "editor.codeActionsOnSave": {
+        "source.organizeImports": true
+    },
+    "editor.minimap.enabled": false,
+    "editor.multiCursorModifier": "ctrlCmd",
+    "editor.wordWrap": "on",
+    "editor.rulers": [
+        88
+    ],
+    "settingsSync.keybindingsPerPlatform": true,
+    "settingsSync.ignoredSettings": [
+        "python.formatting.blackPath",
+        "python.sortImports.path",
+        "python.linting.flake8Path",
+        "terminal.integrated.shell.windows",
+        "python.venvPath"
+    ],
+    "python.formatting.provider": "black",
+    "python.formatting.blackPath": "/Users/devdeepak/.local/bin/black",
+    "python.sortImports.path": "/Users/devdeepak/.local/bin/isort",
+    "python.sortImports.args": [
+        "--multi-line=3",
+        "--trailing-comma",
+        "--force-grid-wrap=0",
+        "--use-parentheses",
+        "--line-width=88"
+    ],
+    "python.linting.enabled": true,
+    "python.linting.lintOnSave": true,
+    "python.linting.flake8Enabled": true,
+    "python.linting.flake8Path": "/Users/devdeepak/.local/bin/flake8",
+    "python.linting.flake8Args": [
+        "--ignore=E265, E50, E501",
+        "--select=C,E,F,W,B,B950",
+        "--extend-ignore=E203, W503",
+        "--max-line-length=88"
+    ],
+    "python.autoComplete.addBrackets": true,
+    "terminal.integrated.inheritEnv": true,
+    "python.venvPath": "~/.venv",
+    "python.terminal.activateEnvironment": true,
+    "python.terminal.activateEnvInCurrentTerminal": true,
+    "terminal.integrated.rendererType": "dom",
+    "python.dataScience.askForKernelRestart": false,
+    "python.dataScience.sendSelectionToInteractiveWindow": true,
+    "python.dataScience.notebookFileRoot": "${workspaceFolder}",
+    "explorer.confirmDelete": false,
+    "debug.onTaskErrors": "debugAnyway",
+    "diffEditor.ignoreTrimWhitespace": false,
+    "python.languageServer": "Pylance",
+    "python.analysis.completeFunctionParens": true,
+    "git.ignoreLegacyWarning": true,
+    "window.zoomLevel": 0,
+    "editor.suggestSelection": "first",
+    "jupyter.askForKernelRestart": false,
+    "jupyter.sendSelectionToInteractiveWindow": true,
+    "jupyter.notebookFileRoot": "${workspaceFolder}",
+    "workbench.editorAssociations": [],
+    "jupyter.interactiveWindowMode": "perFile"
+}

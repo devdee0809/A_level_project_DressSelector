@@ -36,34 +36,44 @@ class DataBase:
 
         self.cnxn.commit()
 
-        rows = self.cursor.execute("SELECT rowid, * FROM USERS").fetchall()
-        for row in rows:
-            print(row)
+        # rows = self.cursor.execute("SELECT rowid, * FROM USERS").fetchall()
+        # for row in rows:
+        #     print(row)
 
     def populate_item_catalogue_table(self, df):
         for row_index, row in df.iterrows():
+
+            with open(row["Image"], "rb") as f:
+                image = f.read()
+
             self.cursor.execute(
-                "INSERT INTO ITEMCATALOGUE VALUES (?,?,?,?,?)",
+                "INSERT INTO ITEMCATALOGUE VALUES (?,?,?,?,?,?)",
                 (
                     row["ItemID"],
                     row["Subcategory"],
                     row["Gender"],
                     row["Season"],
                     row["Colour"],
+                    image,
                 ),
             )
 
         self.cnxn.commit()
 
-        rows = self.cursor.execute("SELECT rowid, * FROM ITEMCATALOGUE").fetchall()
-        for row in rows:
-            print(row)
+        # rows = self.cursor.execute("SELECT rowid, * FROM ITEMCATALOGUE").fetchall()
+        # for row in rows:
+        #     print(row)
 
     def populate_outfit_catalogue_table(self, df):
         for row_index, row in df.iterrows():
             self.cursor.execute(
                 "INSERT INTO OUTFITCATALOGUE VALUES (?,?,?,?)",
-                (row["Headwear"], row["Topwear"], row["Bottomwear"], row["Shoes"],),
+                (
+                    row["Headwear"],
+                    row["Topwear"],
+                    row["Bottomwear"],
+                    row["Shoes"],
+                ),
             )
 
         self.cnxn.commit()
@@ -81,21 +91,44 @@ class DataBase:
 
 def main():
 
-    database = DataBase(Path("database", "database.db",))
-
-    df_users = pd.read_csv(Path("database", "Users.csv",), encoding="utf-8",)
-
-    df_item_catalogue = pd.read_csv(
-        Path("database", "ItemCatalogueSample.csv",), encoding="utf-8",
+    database = DataBase(
+        Path(
+            "database",
+            "database.db",
+        )
     )
+
+    # --------------------------------------- USEARS ---------------------------------------
+    df_users = pd.read_csv(
+        Path(
+            "database",
+            "Users.csv",
+        ),
+        encoding="utf-8",
+    )
+
+    database.populate_users_table(df_users)
+
+    # ------------------------------------ ITEMCATALOGUE -----------------------------------
+    df_item_catalogue = pd.read_csv(
+        Path(
+            "database",
+            "ItemCatalogueSample.csv",
+        ),
+        encoding="utf-8",
+    )
+
+    def image_path(s):
+        return Path("images", s["Subcategory"], s["Gender"], f"{s['ItemID']}.jpg")
+
+    df_item_catalogue["Image"] = df_item_catalogue.apply(image_path, axis=1)
+
+    database.populate_item_catalogue_table(df_item_catalogue)
 
     # take a sample outfit
     # df_item_catalogue.pivot_table(
     #     values="id", index=["gender"], columns=["subCategory"], aggfunc=np.sum,
     # )
-
-    database.populate_users_table(df_users)
-    database.populate_item_catalogue_table(df_item_catalogue)
 
 
 if __name__ == "__main__":
