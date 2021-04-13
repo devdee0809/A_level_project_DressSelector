@@ -64,29 +64,31 @@ class DataBase:
         # for row in rows:
         #     print(row)
 
-    def populate_outfit_catalogue_table(self, df):
+    def populate_preferences_table(self, df):
         for row_index, row in df.iterrows():
             self.cursor.execute(
-                "INSERT INTO OUTFITCATALOGUE VALUES (?,?,?,?)",
+                "INSERT INTO PREFERENCES VALUES (?,?,?)",
                 (
+                    row["UserID"],
+                    row["ItemID"],
+                    row["Rating"],
+                ),
+            )
+        self.cnxn.commit()
+
+    def populate_savedoutfits_table(self, df):
+        for row_index, row in df.iterrows():
+            self.cursor.execute(
+                "INSERT INTO SAVEDOUTFITS VALUES (?,?,?,?,?)",
+                (
+                    row["UserID"],
                     row["Headwear"],
                     row["Topwear"],
                     row["Bottomwear"],
                     row["Shoes"],
                 ),
             )
-
         self.cnxn.commit()
-
-    def populate_outfits_table(self, df):
-        for row_index, row in df.iterrows():
-            self.cursor.execute("INSERT INTO OUTFITS VALUES (?)", (row["UserID"],))
-
-        self.cnxn.commit()
-
-        rows = self.cursor.execute("SELECT rowid, * FROM OUTFITS").fetchall()
-        for row in rows:
-            print(row)
 
 
 def main():
@@ -98,7 +100,7 @@ def main():
         )
     )
 
-    # --------------------------------------- USEARS ---------------------------------------
+    # -------------------------------------- USERS -------------------------------------
     df_users = pd.read_csv(
         Path(
             "database",
@@ -109,7 +111,7 @@ def main():
 
     database.populate_users_table(df_users)
 
-    # ------------------------------------ ITEMCATALOGUE -----------------------------------
+    # ---------------------------------- ITEMCATALOGUE ---------------------------------
     df_item_catalogue = pd.read_csv(
         Path(
             "database",
@@ -129,6 +131,28 @@ def main():
     # df_item_catalogue.pivot_table(
     #     values="id", index=["gender"], columns=["subCategory"], aggfunc=np.sum,
     # )
+
+    # ----------------------------------- PREFERENCES ----------------------------------
+    df_preferences = pd.read_csv(
+        Path(
+            "database",
+            "Preferences.csv",
+        ),
+        encoding="utf-8",
+    )
+
+    database.populate_preferences_table(df_preferences)
+
+    # ---------------------------------- SAVEDOUTFITS ----------------------------------
+    df_savedoutfits = pd.read_csv(
+        Path(
+            "database",
+            "Savedoutfits.csv",
+        ),
+        encoding="utf-8",
+    )
+
+    database.populate_savedoutfits_table(df_savedoutfits)
 
 
 if __name__ == "__main__":

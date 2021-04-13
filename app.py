@@ -19,3 +19,5 @@ app = dash.Dash(
     suppress_callback_exceptions=True,
     external_stylesheets=[dbc.themes.FLATLY],
 )
+
+server = app.server

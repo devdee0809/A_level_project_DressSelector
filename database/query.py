@@ -85,8 +85,48 @@ class DataBase:
         print(f"{self.cursor.rowcount} record(s) were modified...")
         self.cnxn.commit()
 
-    def insert_outfit(self, user_rowid):
-        self.cursor.execute("INSERT INTO OUTFITS VALUES (?)", (user_rowid))
+    def check_outfit_exists(
+        self,
+        user_rowid,
+        headwear_item_id,
+        topwear_item_id,
+        bottomwear_item_id,
+        footwear_item_id,
+    ):
+        row = self.cursor.execute(
+            "SELECT rowid, * FROM SAVEDOUTFITS WHERE UserID=? AND Headwear=? AND Topwear=? AND Bottomwear=? AND Shoes=?",
+            (
+                user_rowid,
+                headwear_item_id,
+                topwear_item_id,
+                bottomwear_item_id,
+                footwear_item_id,
+            ),
+        ).fetchone()
+
+        if row:
+            return True
+        else:
+            return False
+
+    def save_outfit(
+        self,
+        user_rowid,
+        headwear_item_id,
+        topwear_item_id,
+        bottomwear_item_id,
+        footwear_item_id,
+    ):
+        self.cursor.execute(
+            "INSERT INTO SAVEDOUTFITS VALUES (?, ?, ?, ?, ?)",
+            (
+                user_rowid,
+                headwear_item_id,
+                topwear_item_id,
+                bottomwear_item_id,
+                footwear_item_id,
+            ),
+        )
         print(f"{self.cursor.rowcount} record(s) were modified...")
         self.cnxn.commit()
 
@@ -105,6 +145,56 @@ class DataBase:
 
         return rows
 
+    def check_preference_exists(self, user_rowid, item_id):
+        row = self.cursor.execute(
+            "SELECT rowid, * FROM PREFERENCES WHERE UserID=? AND ItemID=?",
+            (user_rowid, item_id),
+        ).fetchone()
+
+        if row:
+            return True
+        else:
+            return False
+
+    def add_preference(self, user_rowid, item_id, is_liked):
+        self.cursor.execute(
+            "INSERT INTO PREFERENCES VALUES (?, ?, ?)",
+            (user_rowid, item_id, is_liked),
+        )
+        print(f"{self.cursor.rowcount} record(s) were modified...")
+        self.cnxn.commit()
+
+    def update_preference(self, is_liked, user_rowid, item_id):
+        self.cursor.execute(
+            "UPDATE PREFERENCES SET Rating=? WHERE UserID=? AND ItemID=?",
+            (is_liked, user_rowid, item_id),
+        )
+        print(f"{self.cursor.rowcount} record(s) were modified...")
+        self.cnxn.commit()
+
+    def get_user_outfits(self, user_rowid):
+        rows = self.cursor.execute(
+            "SELECT Headwear, Topwear, Bottomwear, Shoes FROM SAVEDOUTFITS WHERE UserID=? ",
+            [user_rowid],
+        ).fetchall()
+
+        return rows
+
+    def get_item_details(self, item_id):
+        row = self.cursor.execute(
+            "SELECT * FROM ITEMCATALOGUE WHERE ItemID =?",
+            [item_id],
+        ).fetchone()
+        return row
+
+    def delete_outfit(self, user_id, headwear_id, topwear_id, bottomwear_id, shoes_id):
+        self.cursor.execute(
+            "DELETE FROM SAVEDOUTFITS WHERE UserID=? AND Headwear=? AND Topwear=? AND Bottomwear=? AND Shoes=?",
+            (user_id, headwear_id, topwear_id, bottomwear_id, shoes_id),
+        )
+        print(f"{self.cursor.rowcount} record(s) were modified...")
+        self.cnxn.commit()
+
 
 def main():
     database = DataBase(
@@ -114,7 +204,9 @@ def main():
         )
     )
 
-    rows = database.select_random_outfit(gender="Men")
+    rows = database.get_user_outfits(1)
+    print(rows)
+
     for row in rows:
         print(row[0:5])
 

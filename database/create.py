@@ -50,6 +50,7 @@ class DataBase:
         self.cursor.execute(
             """
         CREATE TABLE "SAVEDOUTFITS" (
+            "UserID"	INTEGER NOT NULL REFERENCES "USERS"("rowid"),
             "Headwear"	INTEGER REFERENCES "ITEMCATALOGUE"("ItemID"),
             "Topwear"	INTEGER REFERENCES "ITEMCATALOGUE"("ItemID"),
             "Bottomwear"	INTEGER REFERENCES "ITEMCATALOGUE"("ItemID"),
@@ -66,7 +67,7 @@ class DataBase:
         CREATE TABLE "PREFERENCES" (
             "UserID"	INTEGER NOT NULL REFERENCES "USERS"("rowid"),
             "ItemID"	INTEGER NOT NULL REFERENCES "ITEMCATALOGUE"("ItemID"),
-            "Rating"	INTEGER NOT NULL
+            "Rating"	BOOLEAN NOT NULL
         );
         """
         )
