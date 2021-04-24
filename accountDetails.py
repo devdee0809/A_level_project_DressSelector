@@ -8,8 +8,6 @@ from dash.exceptions import PreventUpdate
 
 from app import app, database
 
-# TODO: you need to refresh the page for the buttons to work
-
 # ---------------------------------------- DATA ----------------------------------------
 user_rowid, first_name, last_name, gender, email, password = database.get_user_details()
 gender_str_to_int = {"Female": "1", "Male": "2"}
@@ -21,11 +19,13 @@ ds_logo_encoded = base64.b64encode(open(logo_image, "rb").read())
 ds_logo_decoded = f"data:image/png;base64,{ds_logo_encoded.decode()}"
 
 # --------------------------------------- CARDS ----------------------------------------
+# create card containing all the users details inside editable text fields
 account_card = dbc.Card(
     [
         dbc.CardImg(src=ds_logo_decoded, top=True),
         dbc.CardBody(
             [
+                # create input fields
                 dbc.Input(
                     id="input_user_name_account",
                     value="{}".format(email),
@@ -50,6 +50,7 @@ account_card = dbc.Card(
                     type="text",
                     className="mb-3",
                 ),
+                # create dropdown menu for gender
                 dbc.InputGroup(
                     [
                         dbc.InputGroupAddon(
@@ -67,6 +68,7 @@ account_card = dbc.Card(
                     ],
                     className="mb-3",
                 ),
+                # create new row for back, delete and update buttons
                 dbc.Row(
                     [
                         dbc.Col(
@@ -103,14 +105,14 @@ account_card = dbc.Card(
     color="light",
     inverse=True,
 )
-
+# alert for successful or unsuccessful attempts
 alert_account = dbc.Alert(
     id="alert_account",
     dismissable=True,
     is_open=False,
 )
 
-
+# create navbar to naviagte to other WebPages
 navbar = dbc.NavbarSimple(
     children=[
         dbc.NavItem(
@@ -137,6 +139,7 @@ navbar = dbc.NavbarSimple(
                 external_link=True,
             ),
         ),
+        # drop down menu for future proofing
         dbc.DropdownMenu(
             children=[dbc.DropdownMenuItem("Options", header=True)],
             nav=True,
@@ -186,6 +189,7 @@ layout = dbc.Container(
 
 
 # ------------------------------------- CALLBACKS --------------------------------------
+# AppCallback fro deleting and updating user
 @app.callback(
     [
         Output("alert_account", "is_open"),
@@ -213,10 +217,11 @@ def update_delete_details(
     input_last_name_account_value,
     input_gender_select_account_value,
 ):
+    # if either button is clicked
     if button_delete_account_n_clicks or button_update_account_n_clicks:
         ctx = callback_context
         button_id = ctx.triggered[0]["prop_id"].split(".")[0]
-
+        # print current user details in terminal for trouble shooting
         print(
             input_user_name_account_value,
             input_password_account_value,
@@ -224,14 +229,16 @@ def update_delete_details(
             input_last_name_account_value,
             input_gender_select_account_value,
         )
-
+        # delete current user account
         if button_id == "button_delete_account":
             database.delete_user(database.user_rowid)
+            # changes alert attributes for visual feedback
             return (
                 True,
                 "success",
                 "Account deleted successfully.",
             )
+            # update current user account
         elif button_id == "button_update_account":
             database.update_user_details(
                 first_name=input_first_name_account_value,
@@ -241,6 +248,7 @@ def update_delete_details(
                 password=input_password_account_value,
                 user_rowid=database.user_rowid,
             )
+            # changes alert attributes for visual feedback
             return (
                 True,
                 "success",

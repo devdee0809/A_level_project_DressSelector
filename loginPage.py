@@ -11,16 +11,19 @@ from app import app, database
 # ---------------------------------------- DATA ----------------------------------------
 
 # --------------------------------------- IMAGES ---------------------------------------
+# logo
 logo_image = "logo.png"
 ds_logo_encoded = base64.b64encode(open(logo_image, "rb").read())
 ds_logo_decoded = f"data:image/png;base64,{ds_logo_encoded.decode()}"
 
 # --------------------------------------- CARDS ----------------------------------------
+# login card
 login_card = dbc.Card(
     [
         dbc.CardImg(src=ds_logo_decoded, top=True),
         dbc.CardBody(
             [
+                # user name input box
                 dbc.Input(
                     id="input_user_name_login",
                     placeholder="user name",
@@ -28,6 +31,7 @@ login_card = dbc.Card(
                     type="text",
                     className="mb-3",
                 ),
+                # password input box
                 dbc.Input(
                     id="input_password_login",
                     placeholder="password",
@@ -38,6 +42,7 @@ login_card = dbc.Card(
                 dbc.Row(
                     [
                         dbc.Col(
+                            # login button
                             dbc.Button(
                                 children="login",
                                 id="button_login",
@@ -47,6 +52,7 @@ login_card = dbc.Card(
                             width={"size": "auto"},
                         ),
                         dbc.Col(
+                            # signup button
                             dbc.Button(
                                 children="signup",
                                 id="button_signup",
@@ -66,7 +72,7 @@ login_card = dbc.Card(
     color="light",
     inverse=True,
 )
-
+# alert
 alert_login = dbc.Alert(
     id="alert_login",
     dismissable=True,
@@ -101,6 +107,7 @@ layout = dbc.Container(
 
 
 # ------------------------------------- CALLBACKS --------------------------------------
+# AppCallback to validate login
 @app.callback(
     [
         Output("alert_login", "is_open"),
@@ -129,6 +136,7 @@ def validate_login(
                 input_password_login_value is not None
                 and ~input_password_login_value.isspace()
             ):
+                # database method validates the user details
                 if database.check_user_exists(
                     by="email", value=input_user_name_login_value
                 ) and database.check_password_is_correct(
@@ -163,6 +171,7 @@ def validate_login(
 
 
 @app.callback(
+    # changes pathname upon sucessful login
     Output("url", "pathname"),
     [
         Input("button_login", "n_clicks"),

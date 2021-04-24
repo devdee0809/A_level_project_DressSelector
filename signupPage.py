@@ -16,11 +16,13 @@ ds_logo_encoded = base64.b64encode(open(logo_image, "rb").read())
 ds_logo_decoded = f"data:image/png;base64,{ds_logo_encoded.decode()}"
 
 # --------------------------------------- CARDS ----------------------------------------
+# create signup card with text fields and buttons to create account and go back to login page
 signup_card = dbc.Card(
     [
         dbc.CardImg(src=ds_logo_decoded, top=True),
         dbc.CardBody(
             [
+                # text fields for user to input information
                 dbc.Input(
                     id="input_user_name_signup",
                     placeholder="user name",
@@ -47,6 +49,7 @@ signup_card = dbc.Card(
                 ),
                 dbc.InputGroup(
                     [
+                        # create dropdown menu for gender
                         dbc.InputGroupAddon(
                             "Gender",
                             addon_type="prepend",
@@ -61,10 +64,12 @@ signup_card = dbc.Card(
                     ],
                     className="mb-3",
                 ),
+                # create buttons below text boxes
                 dbc.Row(
                     [
                         dbc.Col(
                             dbc.Button(
+                                # back button
                                 children="back",
                                 id="button_back_signup",
                                 color="primary",
@@ -76,6 +81,7 @@ signup_card = dbc.Card(
                         ),
                         dbc.Col(
                             dbc.Button(
+                                # create button
                                 children="create",
                                 id="button_create_signup",
                                 color="primary",
@@ -93,6 +99,7 @@ signup_card = dbc.Card(
     inverse=True,
 )
 
+# alert for visual confirmation
 alert_signup = dbc.Alert(
     id="alert_signup",
     dismissable=True,
@@ -129,6 +136,7 @@ layout = dbc.Container(
 
 
 # ------------------------------------- CALLBACKS --------------------------------------
+# AppCallback to create new user
 @app.callback(
     [
         Output("alert_signup", "is_open"),
@@ -154,26 +162,32 @@ def create_new_user(
 ):
     if button_create_signup_n_clicks:
         if (
+            # if user name is not blank
             input_user_name_signup_value is not None
             and ~input_user_name_signup_value.isspace()
         ):
 
             if (
+                # if password is not blank
                 input_password_signup_value is not None
                 and ~input_password_signup_value.isspace()
             ):
 
                 if (
+                    # if first name is not blank
                     input_first_name_signup_value is not None
                     and ~input_first_name_signup_value.isspace()
                 ):
                     if (
+                        # if last name is not blank
                         input_last_name_signup_value is not None
                         and ~input_last_name_signup_value.isspace()
                     ):
 
                         if input_gender_select_value is not None:
+                            # if gender is not blank
                             database.create_new_user(
+                                # create new user with user inputs
                                 first_name=input_first_name_signup_value,
                                 last_name=input_last_name_signup_value,
                                 gender=gender_int_to_str[input_gender_select_value],
@@ -181,6 +195,7 @@ def create_new_user(
                                 password=input_password_signup_value,
                             )
                             return (
+                                # changes alert attributes for visual feedback
                                 True,
                                 "success",
                                 "Account created successfully, please go back and login with your new details",
@@ -188,6 +203,7 @@ def create_new_user(
 
                         else:
                             return (
+                                # changes alert attributes for visual feedback
                                 True,
                                 "danger",
                                 "Please enter your gender.",
@@ -195,6 +211,7 @@ def create_new_user(
 
                     else:
                         return (
+                            # changes alert attributes for visual feedback
                             True,
                             "danger",
                             "Please enter your last name.",
@@ -202,6 +219,7 @@ def create_new_user(
 
                 else:
                     return (
+                        # changes alert attributes for visual feedback
                         True,
                         "danger",
                         "Please enter your first name.",
@@ -209,6 +227,7 @@ def create_new_user(
 
             else:
                 return (
+                    # changes alert attributes for visual feedback
                     True,
                     "danger",
                     "Please enter your password.",
@@ -216,6 +235,7 @@ def create_new_user(
 
         else:
             return (
+                # changes alert attributes for visual feedback
                 True,
                 "danger",
                 "Please enter your username.",
